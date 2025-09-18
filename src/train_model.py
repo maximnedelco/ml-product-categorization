@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import LinearSVC
+from sklearn.metrics  import accuracy_score
 import joblib
 
 #Incracam datele din fisierul CSV in DataFrame
@@ -65,6 +66,9 @@ df["title_length"] = df["product title"].astype(str).str.len()
 X = df[["title_length","product title"]]
 y = df["category"]
 
+# Impartim datele in seturi de antrenament si testare
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
 # Cream un "ColumnTransformer" pentru a aplica transformari diferite pe coloane diferite
 preprocessor = ColumnTransformer(
 transformers=[
@@ -72,15 +76,37 @@ transformers=[
     ("lenght",MinMaxScaler(),["title_length"])
 ]
 )
-# Cream un "Pipeline" care leaga etapele de pre-procesare si clasificare
+# Definim o lista de clasificatori pentru a-i compara
+classifiers = {
+    "LinearSVC": LinearSVC(random_state=42, max_iter=20000),
+    "LogisticRegression": LogisticRegression(random_state=42, max_iter=20000)
+}
 
-pipeline = Pipeline([
-     ("preprocessing", preprocessor),
-     ("classifier",LinearSVC(random_state=42))
+# Iteram prin clasificatori, ii antrenam si le evaluam performanta
+for name, classifier in classifiers.items():
+    # Cream un "Pipeline" care leaga etapele de pre-procesare si clasificare
+    pipeline = Pipeline([
+        ("preprocessing", preprocessor),
+        ("classifier", classifier)
+    ])
+    
+    # Antrenam pipeline-ul cu datele noastre de antrenament
+    pipeline.fit(X_train, y_train)
+    
+    # Efectuam predictii pe setul de testare
+    y_pred = pipeline.predict(X_test)
+    
+    # Calculam acuratetea si o afisam
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy for {name}: {accuracy:.4f}")
+
+# Antrenam modelul final (LinearSVC, deoarece de obicei performeaza mai bine pentru aceasta sarcina)
+final_model_pipeline = Pipeline([
+    ("preprocessing", preprocessor),
+    ("classifier", LinearSVC(random_state=42, max_iter=20000))
 ])
 
-# Antreman pipeline-ul cu datele noastre
-pipeline.fit(X,y)
+final_model_pipeline.fit(X, y)
 # Salvam modelul antrenat intr-un fisier pentru a-l putea folosi ulterior
-joblib.dump(pipeline,"model/category_model.pkl",compress=3)
+joblib.dump((final_model_pipeline),"model/category_model.pkl",compress=3)
 print("Model trained and saved as 'model/category_model.pkl'.")
