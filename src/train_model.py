@@ -48,9 +48,21 @@ print(df["category"].value_counts())
 print(df.dtypes)
 df["category"] = df["category"].astype("category")
 df["product title"] = df["product title"].astype("string")
-df = df[["product title","category"]]
+df = df.drop(columns=["product id","merchant id", "category label","_product code","number_of_views","merchant rating",
+                      "listing date"])
 
-print(df.dtypes)
+print(df.info())
+
+df["title_length"] = df["product title"].astype(str).str.len()
+
+X = df[["title_length","product title"]]
+y = df["category"]
+
+
+
+
+
+
 
 
 
