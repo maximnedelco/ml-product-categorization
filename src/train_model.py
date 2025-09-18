@@ -77,7 +77,7 @@ pipeline = Pipeline([
 
 pipeline.fit(X,y)
 
-joblib.dump(pipeline,"model/category_model.pkl")
+joblib.dump(pipeline,"model/category_model.pkl",compress=3)
 print("Model trained and saved as 'model/category_model.pkl'.")
 
 
