@@ -14,11 +14,10 @@ while True:
 
     title_length = len(product_title)
 
-    # Creeaza DataFrame-ul de intrare pentru predictie
-    # Asigura-te ca numele coloanelor sunt exact la fel ca cele folosite la antrenare
+    
     user_input = pd.DataFrame([{
-        "product title": product_title,  # Corectat numele coloanei
-        "title_length": title_length    # Corectat numele coloanei
+        "product title": product_title, 
+        "title_length": title_length    
     }])
 
     # Efectueaza predictia
