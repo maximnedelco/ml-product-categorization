@@ -8,3 +8,4 @@ import joblib
 df = pd.read_csv("data/IMLP4_TASK_03-products.csv")
 print(df.head())
 print(df.info())
+
