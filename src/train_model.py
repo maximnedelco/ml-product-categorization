@@ -6,6 +6,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import LinearSVC
 import joblib
 
 df = pd.read_csv("data/IMLP4_TASK_03-products.csv")
@@ -71,7 +72,7 @@ transformers=[
 
 pipeline = Pipeline([
      ("preprocessing", preprocessor),
-     ("classifier",RandomForestClassifier(n_estimators=200, random_state=42))
+     ("classifier",LinearSVC(random_state=42))
 ])
 
 
