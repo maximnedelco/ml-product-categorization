@@ -71,7 +71,7 @@ transformers=[
 
 pipeline = Pipeline([
      ("preprocessing", preprocessor),
-     ("classifier",RandomForestClassifier())
+     ("classifier",RandomForestClassifier(n_estimators=200, random_state=42))
 ])
 
 
@@ -79,16 +79,3 @@ pipeline.fit(X,y)
 
 joblib.dump(pipeline,"model/category_model.pkl",compress=3)
 print("Model trained and saved as 'model/category_model.pkl'.")
-
-
-
-
-
-
-
-
-
-
-
-
-

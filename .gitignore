@@ -1,1 +1,3 @@
-model/category_model.pkl
+# Ignore all .pkl files
+*.pkl
+/model
