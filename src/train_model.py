@@ -3,6 +3,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.ensemble import RandomForestClassifier
 import joblib
 
 df = pd.read_csv("data/IMLP4_TASK_03-products.csv")
@@ -57,6 +60,25 @@ df["title_length"] = df["product title"].astype(str).str.len()
 
 X = df[["title_length","product title"]]
 y = df["category"]
+
+
+preprocessor = ColumnTransformer(
+transformers=[
+    ("title",TfidfVectorizer(),"product title"),
+    ("lenght",MinMaxScaler(),["title_length"])
+]
+)
+
+pipeline = Pipeline([
+     ("preprocessing", preprocessor),
+     ("classifier",RandomForestClassifier())
+])
+
+
+pipeline.fit(X,y)
+
+joblib.dump(pipeline,"model/category_model.pkl")
+print("Model trained and saved as 'model/category_model.pkl'.")
 
 
 
