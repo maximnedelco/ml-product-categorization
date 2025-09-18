@@ -9,3 +9,52 @@ df = pd.read_csv("data/IMLP4_TASK_03-products.csv")
 print(df.head())
 print(df.info())
 
+
+df.columns = df.columns.str.lower().str.strip()
+
+
+print(df.info())
+df.isna().sum()
+df.dropna(subset= ["product title","category label"],inplace=True)
+
+
+
+print(df["category label"].value_counts())
+
+
+category_map = {
+    'Fridges': 'Fridge Freezers',
+    'fridge': 'Fridge Freezers',
+    'Fridge Freezers': 'Fridge Freezers',
+    'Mobile Phone': 'Mobile Phones',
+    'Mobile Phones': 'Mobile Phones',
+    'CPU': 'CPUs',
+    'CPUs': 'CPUs',
+    'TVs': 'TVs',
+    'Freezers': 'Freezers',
+    'Washing Machines': 'Washing Machines',
+    'Dishwashers': 'Dishwashers',
+    'Digital Cameras': 'Digital Cameras',
+    'Microwaves': 'Microwaves'
+}
+
+
+
+df["category"] = df["category label"].map(category_map).fillna(df['category label'])
+
+
+print(df["category"].value_counts())
+
+print(df.dtypes)
+df["category"] = df["category"].astype("category")
+df["product title"] = df["product title"].astype("string")
+df = df[["product title","category"]]
+
+print(df.dtypes)
+
+
+
+
+
+
+
